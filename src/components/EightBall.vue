@@ -1,17 +1,19 @@
 <template>
   <div class="card">
     <input
-        v-model="newQuestion"
+        ref="inputRef"
+        v-model.trim="newQuestion"
         type="text"
         placeholder="Ask a (Yes or No) Question"
-        :class="{ 'validation-error': hasValidationError }"
+        :class="{ 'input-error': hasValidationError }"
         @change="clearValidationError"
-        @keyup.enter="rollBall"/>
+        @keyup.enter="rollBall"
+    />
 
 
     <div
         ref="validationRef"
-        class="validation-error">
+        class="validation-message">
       {{ newQuestionMessage }}
     </div>
 
@@ -23,87 +25,18 @@
     </button>
 
     <ul class="answers">
-      <li v-for="answer in answers">
+      <li v-for="(answer, index) in answers" :key="index">
         <span class="question">Question:</span> {{ answer.question }}<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span class="question">Answer:</span> <span :class="answer.answer.positivity">{{ answer.answer.value }}</span>
+        <span class="question">Answer: </span>
+        <span :class="answer.answer.positivity">{{ answer.answer.value }}</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from "vue";
-
-const newQuestion = ref('')
-const newQuestionMessage = ref('\u00A0')
-const answers = ref<Answer[]>([])
-const validationRef = ref<HTMLInputElement | null>(null)
-
-const rollBall = () => {
-  console.log('roll');
-  const question = newQuestion.value.trim()
-  newQuestionMessage.value = '\u00A0'
-
-  if (!question)
-    return
-
-  if (!isYesNoQuestion(question)) {
-    triggerValidationAnimation()
-    return
-  }
-
-  let randomMessage = messages[Math.floor(Math.random() * messages.length)]!
-  answers.value.unshift({question: newQuestion.value, answer: randomMessage})
-  newQuestion.value = ''
-}
-
-const isYesNoQuestion = (question: string): boolean => {
-  return !hasInvalidStartWord(question, 'who') &&
-      !hasInvalidStartWord(question, 'what') &&
-      !hasInvalidStartWord(question, 'when') &&
-      !hasInvalidStartWord(question, 'where') &&
-      !hasInvalidStartWord(question, 'why') &&
-      !hasInvalidStartWord(question, 'how');
-}
-
-const hasInvalidStartWord = (question: string, invalidStart: string): boolean => {
-  if (question.toLowerCase().startsWith(invalidStart)) {
-    console.log("has: " + invalidStart)
-    newQuestionMessage.value = 'Ask a yes-or-no question, not "' + invalidStart + '".'
-    return true;
-  }
-  return false;
-}
-
-const triggerValidationAnimation = () => {
-  if (!validationRef.value)
-    return
-
-  validationRef.value.classList.remove('validation-error')
-  // force reflow
-  void validationRef.value.offsetWidth
-  validationRef.value.classList.add('validation-error')
-}
-
-const clearValidationError = () => {
-  console.log('clear 1');
-  if (!hasValidationError)
-    return
-  const question = newQuestion.value.trim()
-  console.log('clear 2');
-  if (!isYesNoQuestion(question))
-    return;
-  newQuestionMessage.value = '\u00A0'
-}
-
-const hasValidationError = computed(() => {
-  return newQuestionMessage.value.trim().length > 0
-})
-
-const isButtonDisabled = computed(() => {
-  return newQuestion.value.trim() === '';
-});
+import { ref, computed, onMounted } from 'vue'
 
 interface Answer {
   question: string
@@ -112,10 +45,18 @@ interface Answer {
 
 interface Message {
   value: string
-  positivity: string
+  positivity: 'positive' | 'neutral' | 'negative'
 }
 
-const messages = [
+// --- state ---
+const newQuestion = ref('')
+const newQuestionMessage = ref('\u00A0')
+const answers = ref<Answer[]>([])
+const validationRef = ref<HTMLElement | null>(null)
+const inputRef = ref<HTMLElement | null>(null)
+
+// --- constants ---
+const messages: Message[] = [
   {value: 'It is certain', positivity: 'positive'},
   {value: 'It is decidedly so', positivity: 'positive'},
   {value: 'Yes definitely', positivity: 'positive'},
@@ -137,6 +78,81 @@ const messages = [
   {value: 'Outlook not so good', positivity: 'negative'},
   {value: 'Very doubtful', positivity: 'negative'},
 ]
+
+// const inputRef = ref(null);
+// --- logic ---
+onMounted(() => {
+  if (inputRef.value) {
+    inputRef.value.focus()
+  }
+})
+
+const rollBall = () => {
+  const question = newQuestion.value.trim()
+  newQuestionMessage.value = '\u00A0'
+
+  if (!question)
+    return
+
+  if (!isYesNoQuestion(question)) {
+    triggerValidationAnimation()
+    return
+  }
+
+  const randomMessage = messages[Math.floor(Math.random() * messages.length)]
+  answers.value.unshift({ question, answer: randomMessage! })
+  // answers.value.unshift({question: question, answer: randomMessage})
+  newQuestion.value = ''
+}
+
+const isYesNoQuestion = (question: string): boolean => {
+  const invalidStarts = ['who', 'what', 'when', 'where', 'why', 'how']
+  const lower = question.toLowerCase()
+
+  const found = invalidStarts.find(word => lower.startsWith(word))
+  if (found) {
+    newQuestionMessage.value = `Ask a yes-or-no question, not "${found}".`
+    return false
+  }
+  return true
+}
+
+/**
+ * Restart the shake animation by manipulating the DOM class.
+ * This is reliable across browsers since it forces a reflow.
+ */
+const triggerValidationAnimation = () => {
+  const el = validationRef.value
+  if (!el) return
+
+  // ensure message is visible (in case it was a NBSP)
+  if (newQuestionMessage.value.trim() === '\u00A0') {
+    // if no message set yet, polite default
+    newQuestionMessage.value = 'Please ask a yes-or-no question.'
+  }
+
+  // remove class if present, force reflow, then add it back
+  el.classList.remove('shake')
+  // force reflow — guaranteed to restart CSS animation on add
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  void el.offsetWidth
+  el.classList.add('shake')
+}
+
+const clearValidationError = () => {
+  if (isYesNoQuestion(newQuestion.value.trim())) {
+    newQuestionMessage.value = '\u00A0'
+  }
+}
+
+
+// --- computed ---
+const hasValidationError = computed(
+    () => newQuestionMessage.value.trim() !== ''
+)
+const isButtonDisabled = computed(
+    () => newQuestion.value.trim() === ''
+)
 </script>
 
 <style scoped>
@@ -156,12 +172,20 @@ input:focus, input:hover {
   border: 2px solid #f77f00;
 }
 
-.validation-error {
+.input-error {
   border-color: #ff0000;
 }
 
-/* Combo flicker + shake animation */
-@keyframes flicker-shake {
+.validation-message {
+  font-size: 0.9em;
+  margin-top: -1.5em;
+  margin-bottom: 0.5em;
+  min-height: 1.2em;
+  text-align: left;
+}
+
+/* Shake animation */
+@keyframes shake {
   0%, 100% {
     transform: translateX(0);
   }
@@ -173,14 +197,9 @@ input:focus, input:hover {
   }
 }
 
-div.validation-error {
-  animation: flicker-shake 0.2s ease-in-out;
-   font-size: 0.9em;
-   margin-top: -1.5em;
-   margin-bottom: 0.5em;
-   min-height: 1.2em; /* keeps layout stable */
-  text-align: left;
- }
+.shake {
+  animation: shake 0.2s ease-in-out;
+}
 
 button {
   border-radius: 8px;
