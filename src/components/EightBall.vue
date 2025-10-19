@@ -1,42 +1,7 @@
-<template>
-  <div class="card">
-    <input
-        ref="inputRef"
-        v-model.trim="newQuestion"
-        type="text"
-        placeholder="Ask a (Yes or No) Question"
-        :class="{ 'input-error': hasValidationError }"
-        @change="clearValidationError"
-        @keyup.enter="rollBall"
-    />
-
-
-    <div
-        ref="validationRef"
-        class="validation-message">
-      {{ newQuestionMessage }}
-    </div>
-
-    <button
-        type="button"
-        @click="rollBall"
-        :disabled="isButtonDisabled">
-      Roll the Magic Eight Ball
-    </button>
-
-    <ul class="answers">
-      <li v-for="(answer, index) in answers" :key="index">
-        <span class="question">Question:</span> {{ answer.question }}<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span class="question">Answer: </span>
-        <span :class="answer.answer.positivity">{{ answer.answer.value }}</span>
-      </li>
-    </ul>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import AppButton from "./AppButton.vue";
+import AppValidationText from "./AppValidationText.vue";
 
 interface Answer {
   question: string
@@ -49,11 +14,11 @@ interface Message {
 }
 
 // --- state ---
-const newQuestion = ref('')
-const newQuestionMessage = ref('\u00A0')
+const eightBallQuestion = ref('')
 const answers = ref<Answer[]>([])
-const validationRef = ref<HTMLElement | null>(null)
 const inputRef = ref<HTMLElement | null>(null)
+const validationTextRef = ref<typeof AppValidationText | null>(null)
+const interrogative = ref<string | undefined>(undefined)
 
 // --- constants ---
 const messages: Message[] = [
@@ -88,72 +53,77 @@ onMounted(() => {
 })
 
 const rollBall = () => {
-  const question = newQuestion.value.trim()
-  newQuestionMessage.value = '\u00A0'
+  const question = eightBallQuestion.value.trim()
 
   if (!question)
     return
 
-  if (!isYesNoQuestion(question)) {
-    triggerValidationAnimation()
+  interrogative.value = checkInterrogative(question);
+
+  if (interrogative.value) {
+    validationTextRef.value!.setInvalid(`Ask a yes-or-no question, not "${interrogative.value}".`)
     return
   }
 
+  validationTextRef.value!.setValid()
+
   const randomMessage = messages[Math.floor(Math.random() * messages.length)]
   answers.value.unshift({ question, answer: randomMessage! })
-  // answers.value.unshift({question: question, answer: randomMessage})
-  newQuestion.value = ''
+  eightBallQuestion.value = ''
 }
 
-const isYesNoQuestion = (question: string): boolean => {
-  const invalidStarts = ['who', 'what', 'when', 'where', 'why', 'how']
+const checkInterrogative = (question: string) => {
+  const interrogatives = ['who', 'what', 'when', 'where', 'why', 'how']
   const lower = question.toLowerCase()
-
-  const found = invalidStarts.find(word => lower.startsWith(word))
-  if (found) {
-    newQuestionMessage.value = `Ask a yes-or-no question, not "${found}".`
-    return false
-  }
-  return true
-}
-
-/**
- * Restart the shake animation by manipulating the DOM class.
- * This is reliable across browsers since it forces a reflow.
- */
-const triggerValidationAnimation = () => {
-  const el = validationRef.value
-  if (!el) return
-
-  // ensure message is visible (in case it was a NBSP)
-  if (newQuestionMessage.value.trim() === '\u00A0') {
-    // if no message set yet, polite default
-    newQuestionMessage.value = 'Please ask a yes-or-no question.'
-  }
-
-  // remove class if present, force reflow, then add it back
-  el.classList.remove('shake')
-  // force reflow — guaranteed to restart CSS animation on add
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  void el.offsetWidth
-  el.classList.add('shake')
+  return interrogatives.find(word => lower.startsWith(word))
 }
 
 const clearValidationError = () => {
-  if (isYesNoQuestion(newQuestion.value.trim())) {
-    newQuestionMessage.value = '\u00A0'
+  if (!hasValidationError)
+    return
+
+  const question = eightBallQuestion.value.trim()
+
+  if (!checkInterrogative(question)) {
+    interrogative.value = undefined
+    validationTextRef.value!.setValid()
   }
 }
 
-
 // --- computed ---
 const hasValidationError = computed(
-    () => newQuestionMessage.value.trim() !== ''
+    () => interrogative.value
 )
 const isButtonDisabled = computed(
-    () => newQuestion.value.trim() === ''
+    () => eightBallQuestion.value.trim() === ''
 )
 </script>
+
+<template>
+  <div class="card">
+    <input
+        ref="inputRef"
+        v-model.trim="eightBallQuestion"
+        type="text"
+        placeholder="Ask a (Yes or No) Question"
+        :class="{ 'input-error': hasValidationError }"
+        @change="clearValidationError"
+        @keyup.enter="rollBall"
+    />
+
+    <AppValidationText ref="validationTextRef"/>
+    <AppButton :disabled="isButtonDisabled" @click="rollBall">Roll the Magic Eight Ball</AppButton>
+
+    <ul class="answers">
+      <li v-for="(answer, index) in answers" :key="index">
+        <span class="question">Question:</span> {{ answer.question }}<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="question">Answer: </span>
+        <span :class="answer.answer.positivity">{{ answer.answer.value }}</span>
+      </li>
+    </ul>
+  </div>
+</template>
 
 <style scoped>
 input {
@@ -172,59 +142,8 @@ input:focus, input:hover {
   border: 2px solid #f77f00;
 }
 
-.input-error {
+.input-error, input:focus.input-error, input:hover.input-error {
   border-color: #ff0000;
-}
-
-.validation-message {
-  font-size: 0.9em;
-  margin-top: -1.5em;
-  margin-bottom: 0.5em;
-  min-height: 1.2em;
-  text-align: left;
-}
-
-/* Shake animation */
-@keyframes shake {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  30%, 90%{
-    transform: translateX(-2px);
-  }
-  60%{
-    transform: translateX(2px);
-  }
-}
-
-.shake {
-  animation: shake 0.2s ease-in-out;
-}
-
-button {
-  border-radius: 8px;
-  border: 2px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 550;
-  font-family: inherit;
-  color: #003049;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:not([disabled]):hover {
-  border: 2px solid #f77f00;
-}
-
-button[disabled] {
-  opacity: 0.6;
-  cursor: default;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 ul {
