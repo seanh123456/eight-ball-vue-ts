@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import AppButton from "./AppButton.vue";
+import {ref, computed, onMounted} from 'vue'
+import AppSubmitButton from "./AppSubmitButton.vue";
 import AppValidationText from "./AppValidationText.vue";
 import AppInputText from "./AppInputText.vue";
 
@@ -17,8 +17,8 @@ interface Message {
 // --- state ---
 const eightBallQuestion = ref('')
 const answers = ref<Answer[]>([])
-const inputRef = ref<typeof AppInputText | null>(null)
-const validationTextRef = ref<typeof AppValidationText | null>(null)
+const inputRef = ref<InstanceType<typeof AppInputText> | null>(null);
+const validationTextRef = ref<InstanceType<typeof AppValidationText> | null>(null);
 const interrogative = ref<string | undefined>(undefined)
 
 // --- constants ---
@@ -69,7 +69,7 @@ const rollBall = () => {
   validationTextRef.value!.setValid()
 
   const randomMessage = messages[Math.floor(Math.random() * messages.length)]
-  answers.value.unshift({ question, answer: randomMessage! })
+  answers.value.unshift({question, answer: randomMessage!})
   eightBallQuestion.value = ''
 }
 
@@ -102,21 +102,24 @@ const isButtonDisabled = computed(
 
 <template>
   <div class="card">
-    <AppInputText
-        ref="inputRef"
-        v-model.trim="eightBallQuestion"
-        placeholder="Ask a (Yes or No) Question"
-        :hasValidationError="hasValidationError"
-        @change="clearValidationError"
-        @keyup.enter="rollBall" />
+    <form @submit.prevent="rollBall">
 
-    <AppValidationText
-        ref="validationTextRef"/>
-    <AppButton
-        :disabled="isButtonDisabled"
-        @click="rollBall">
-      Roll the Magic Eight Ball
-    </AppButton>
+      <AppInputText
+          ref="inputRef"
+          v-model.trim="eightBallQuestion"
+          placeholder="Ask a (Yes or No) Question"
+          :hasValidationError="hasValidationError"
+          @change="clearValidationError"
+          @keyup.enter="rollBall"/>
+
+      <AppValidationText
+          ref="validationTextRef"/>
+
+      <AppSubmitButton
+          :disabled="isButtonDisabled">
+        Roll the Magic Eight Ball
+      </AppSubmitButton>
+    </form>
 
     <ul class="answers">
       <li v-for="(answer, index) in answers" :key="index">
