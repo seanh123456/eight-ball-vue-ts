@@ -33,7 +33,7 @@ header {
 
 main {
   text-align: center;
-  overflow: scroll;
+  overflow-y: auto;
 }
 
 footer {

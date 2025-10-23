@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import AppButton from "./AppButton.vue";
 import AppValidationText from "./AppValidationText.vue";
+import AppInputText from "./AppInputText.vue";
 
 interface Answer {
   question: string
@@ -16,7 +17,7 @@ interface Message {
 // --- state ---
 const eightBallQuestion = ref('')
 const answers = ref<Answer[]>([])
-const inputRef = ref<HTMLElement | null>(null)
+const inputRef = ref<typeof AppInputText | null>(null)
 const validationTextRef = ref<typeof AppValidationText | null>(null)
 const interrogative = ref<string | undefined>(undefined)
 
@@ -92,7 +93,7 @@ const clearValidationError = () => {
 
 // --- computed ---
 const hasValidationError = computed(
-    () => interrogative.value
+    () => !!interrogative.value
 )
 const isButtonDisabled = computed(
     () => eightBallQuestion.value.trim() === ''
@@ -101,18 +102,21 @@ const isButtonDisabled = computed(
 
 <template>
   <div class="card">
-    <input
+    <AppInputText
         ref="inputRef"
         v-model.trim="eightBallQuestion"
-        type="text"
         placeholder="Ask a (Yes or No) Question"
-        :class="{ 'input-error': hasValidationError }"
+        :hasValidationError="hasValidationError"
         @change="clearValidationError"
-        @keyup.enter="rollBall"
-    />
+        @keyup.enter="rollBall" />
 
-    <AppValidationText ref="validationTextRef"/>
-    <AppButton :disabled="isButtonDisabled" @click="rollBall">Roll the Magic Eight Ball</AppButton>
+    <AppValidationText
+        ref="validationTextRef"/>
+    <AppButton
+        :disabled="isButtonDisabled"
+        @click="rollBall">
+      Roll the Magic Eight Ball
+    </AppButton>
 
     <ul class="answers">
       <li v-for="(answer, index) in answers" :key="index">
@@ -126,26 +130,6 @@ const isButtonDisabled = computed(
 </template>
 
 <style scoped>
-input {
-  width: 100%;
-  border-radius: 6px;
-  font-size: 1.5em;
-  margin: 1em 0;
-  padding: 2px 6px;
-  border: 2px solid transparent;
-  transition: border-color .25s;
-  color: #003049;
-}
-
-input:focus, input:hover {
-  outline: none;
-  border: 2px solid #f77f00;
-}
-
-.input-error, input:focus.input-error, input:hover.input-error {
-  border-color: #ff0000;
-}
-
 ul {
   list-style: none;
   padding: 0;
