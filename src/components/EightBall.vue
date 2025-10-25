@@ -1,18 +1,11 @@
 <script setup lang="ts">
 import {ref, computed, onMounted} from 'vue'
-import AppSubmitButton from "./AppSubmitButton.vue";
-import AppValidationText from "./AppValidationText.vue";
-import AppInputText from "./AppInputText.vue";
-
-interface Answer {
-  question: string
-  answer: Message
-}
-
-interface Message {
-  value: string
-  positivity: 'positive' | 'neutral' | 'negative'
-}
+import AppSubmitButton from "./AppSubmitButton.vue"
+import AppValidationText from "./AppValidationText.vue"
+import AppInputText from "./AppInputText.vue"
+import AppUnorderedListFade from "./AppUnorderedListFade.vue";
+import type {Answer} from "../constants/types.ts";
+import {messages} from "../constants/messages.ts";
 
 // --- state ---
 const eightBallQuestion = ref('')
@@ -21,31 +14,6 @@ const inputRef = ref<InstanceType<typeof AppInputText> | null>(null);
 const validationTextRef = ref<InstanceType<typeof AppValidationText> | null>(null);
 const interrogative = ref<string | undefined>(undefined)
 
-// --- constants ---
-const messages: Message[] = [
-  {value: 'It is certain', positivity: 'positive'},
-  {value: 'It is decidedly so', positivity: 'positive'},
-  {value: 'Yes definitely', positivity: 'positive'},
-  {value: 'You may rely on it', positivity: 'positive'},
-  {value: 'Without a doubt', positivity: 'positive'},
-  {value: 'As I see it, yes', positivity: 'positive'},
-  {value: 'Most likely', positivity: 'positive'},
-  {value: 'Outlook good', positivity: 'positive'},
-  {value: 'Yes', positivity: 'positive'},
-  {value: 'Signs point to yes', positivity: 'positive'},
-  {value: 'Reply hazy, try again', positivity: 'neutral'},
-  {value: 'Ask again later', positivity: 'neutral'},
-  {value: 'Better not tell you now', positivity: 'neutral'},
-  {value: 'Cannot predict now', positivity: 'neutral'},
-  {value: 'Concentrate and ask again', positivity: 'neutral'},
-  {value: 'Don\'t count on it', positivity: 'negative'},
-  {value: 'My reply is no', positivity: 'negative'},
-  {value: 'My sources say no', positivity: 'negative'},
-  {value: 'Outlook not so good', positivity: 'negative'},
-  {value: 'Very doubtful', positivity: 'negative'},
-]
-
-// const inputRef = ref(null);
 // --- logic ---
 onMounted(() => {
   if (inputRef.value) {
@@ -55,10 +23,6 @@ onMounted(() => {
 
 const rollBall = () => {
   const question = eightBallQuestion.value.trim()
-
-  if (!question)
-    return
-
   interrogative.value = checkInterrogative(question);
 
   if (interrogative.value) {
@@ -69,7 +33,7 @@ const rollBall = () => {
   validationTextRef.value!.setValid()
 
   const randomMessage = messages[Math.floor(Math.random() * messages.length)]
-  answers.value.unshift({question, answer: randomMessage!})
+  answers.value.push({question, answer: randomMessage!})
   eightBallQuestion.value = ''
 }
 
@@ -102,15 +66,14 @@ const isButtonDisabled = computed(
 
 <template>
   <div class="card">
-    <form @submit.prevent="rollBall">
 
+    <form @submit.prevent="rollBall">
       <AppInputText
           ref="inputRef"
-          v-model.trim="eightBallQuestion"
           placeholder="Ask a (Yes or No) Question"
-          :hasValidationError="hasValidationError"
-          @change="clearValidationError"
-          @keyup.enter="rollBall"/>
+          :class="{ 'input-error': hasValidationError }"
+          v-model.trim="eightBallQuestion"
+          @change="clearValidationError"/>
 
       <AppValidationText
           ref="validationTextRef"/>
@@ -121,26 +84,19 @@ const isButtonDisabled = computed(
       </AppSubmitButton>
     </form>
 
-    <ul class="answers">
+    <AppUnorderedListFade class="reverse">
       <li v-for="(answer, index) in answers" :key="index">
         <span class="question">Question:</span> {{ answer.question }}<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <span class="question">Answer: </span>
         <span :class="answer.answer.positivity">{{ answer.answer.value }}</span>
       </li>
-    </ul>
+    </AppUnorderedListFade>
+
   </div>
 </template>
 
 <style scoped>
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 2em 0;
-  text-align: left;
-  color: #003049;
-}
-
 ul .question {
   font-weight: bold;
 }

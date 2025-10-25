@@ -31,8 +31,14 @@ header {
   text-align: center;
 }
 
+h1 {
+  color: var(--primary-color)
+}
+
+
 main {
   text-align: center;
+  min-height: 70vh;
   overflow-y: auto;
 }
 
@@ -64,5 +70,4 @@ footer ul {
 footer ul li {
   margin: 0 0.5em;
 }
-
 </style>

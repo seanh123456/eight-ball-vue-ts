@@ -30,10 +30,15 @@ body {
     padding: 2rem;
 }
 
+button {
+    background-color: var(--a1-500);
+}
+
 h1 {
     font-size: 3.2em;
     line-height: 1.1;
 }
+
 
 a {
     font-weight: 500;
@@ -47,15 +52,4 @@ a:hover {
 
 .card {
     padding: 1px 2em;
-}
-
-@media (prefers-color-scheme: light) {
-    :root {
-        color: #d62828;
-        background-color: #eae2b7;
-    }
-
-    button {
-        background-color: #fcbf49;
-    }
 }

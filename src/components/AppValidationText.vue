@@ -18,9 +18,8 @@ const shake = () => {
   if (!validationElement)
     return
 
-  // remove class if present, force reflow, then add it back
+  // retrigger animation
   validationElement.classList.remove('shake')
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   void validationElement.offsetWidth
   validationElement.classList.add('shake')
 }
@@ -46,7 +45,6 @@ div {
   text-align: left;
 }
 
-/* Shake animation */
 @keyframes shake {
   0%, 100% {
     transform: translateX(0);

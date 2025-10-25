@@ -3,27 +3,14 @@ import {ref} from "vue";
 
 const inputRef = ref<HTMLElement | null>(null)
 
-defineProps({
-  placeholderMessage: {
-    type: String,
-    default: '',
-  },
-  hasValidationError: {
-    type: Boolean,
-    default: false,
-  }
-})
 const inputValue = defineModel()
-const emit = defineEmits(['change', 'keyup.enter']);
+const emit = defineEmits(['change']);
 defineExpose({
   focus,
 })
 
 function handleChange(event: any) {
   emit('change', event);
-}
-function handleEnter(event: KeyboardEvent) {
-  emit('keyup.enter', event);
 }
 function focus() {
   if (inputRef.value)
@@ -33,13 +20,10 @@ function focus() {
 
 <template>
   <input
+      type="text"
       ref="inputRef"
       v-model="inputValue"
-      type="text"
-      :placeholder="placeholderMessage"
-      :class="{ 'input-error': hasValidationError }"
       @change="handleChange"
-      @keyup.enter="handleEnter"
   />
 </template>
 
