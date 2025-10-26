@@ -12,6 +12,7 @@ defineExpose({
 function handleChange(event: any) {
   emit('change', event);
 }
+
 function focus() {
   if (inputRef.value)
     inputRef.value.focus()
@@ -36,15 +37,14 @@ input {
   padding: 2px 6px;
   border: 2px solid transparent;
   transition: border-color .25s;
-  color: #003049;
 }
 
 input:focus, input:hover {
   outline: none;
-  border: 2px solid #f77f00;
+  border: 2px solid var(--w-500);
 }
 
 .input-error, input:focus.input-error, input:hover.input-error {
-  border-color: #ff0000;
+  border-color: var(--w-900);
 }
 </style>

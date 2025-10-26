@@ -30,15 +30,15 @@ button {
   border: 2px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 550;
+  font-weight: 500;
   font-family: inherit;
-  color: #003049;
+  color: var(--a2-900);
   cursor: pointer;
   transition: border-color 0.25s;
 }
 
 button:not([disabled]):hover {
-  border: 2px solid #f77f00;
+  border: 2px solid var(--w-500);
 }
 
 button[disabled] {

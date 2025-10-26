@@ -26,25 +26,9 @@ import EightBall from './components/EightBall.vue'
 </template>
 
 <style scoped>
-header {
-  background-color: #fcbf49;
-  text-align: center;
-}
 
 h1 {
-  color: var(--primary-color)
-}
-
-
-main {
-  text-align: center;
-  min-height: 70vh;
-  overflow-y: auto;
-}
-
-footer {
-  color: #003049;
-  background-color: #ded083;
+  color: var(--p-600)
 }
 
 .footer {
@@ -56,7 +40,6 @@ footer {
   max-width: 720px;
   margin: 0 auto;
   padding: .7rem;
-  font-weight: 550;
 }
 
 footer ul {

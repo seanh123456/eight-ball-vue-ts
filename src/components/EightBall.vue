@@ -4,6 +4,7 @@ import AppSubmitButton from "./AppSubmitButton.vue"
 import AppValidationText from "./AppValidationText.vue"
 import AppInputText from "./AppInputText.vue"
 import AppUnorderedListFade from "./AppUnorderedListFade.vue";
+import EightBallAnswerItem from "./EightBallListItem.vue"
 import type {Answer} from "../constants/types.ts";
 import {messages} from "../constants/messages.ts";
 
@@ -26,14 +27,14 @@ const rollBall = () => {
   interrogative.value = checkInterrogative(question);
 
   if (interrogative.value) {
-    validationTextRef.value!.setInvalid(`Ask a yes-or-no question, not "${interrogative.value}".`)
+    validationTextRef.value?.setInvalid(`Ask a yes-or-no question, not "${interrogative.value}".`)
     return
   }
 
-  validationTextRef.value!.setValid()
+  validationTextRef.value?.setValid()
 
   const randomMessage = messages[Math.floor(Math.random() * messages.length)]
-  answers.value.push({question, answer: randomMessage!})
+  answers.value.push({time: new Date(), question, answer: randomMessage!})
   eightBallQuestion.value = ''
 }
 
@@ -51,7 +52,7 @@ const clearValidationError = () => {
 
   if (!checkInterrogative(question)) {
     interrogative.value = undefined
-    validationTextRef.value!.setValid()
+    validationTextRef.value?.setValid()
   }
 }
 
@@ -85,31 +86,16 @@ const isButtonDisabled = computed(
     </form>
 
     <AppUnorderedListFade class="reverse">
-      <li v-for="(answer, index) in answers" :key="index">
-        <span class="question">Question:</span> {{ answer.question }}<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span class="question">Answer: </span>
-        <span :class="answer.answer.positivity">{{ answer.answer.value }}</span>
-      </li>
+      <EightBallAnswerItem
+          v-for="(answer, index) in answers"
+          :key="index"
+          :answer="answer"
+      />
     </AppUnorderedListFade>
 
   </div>
 </template>
 
 <style scoped>
-ul .question {
-  font-weight: bold;
-}
 
-.positive {
-  color: forestgreen;
-}
-
-.neutral {
-  color: grey;
-}
-
-.negative {
-  color: red;
-}
 </style>

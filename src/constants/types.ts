@@ -1,4 +1,5 @@
 export interface Answer {
+    time: Date
     question: string
     answer: Message
 }

@@ -43,6 +43,7 @@ div {
   margin-bottom: 0.5em;
   min-height: 1.2em;
   text-align: left;
+  color: var(--w-900);
 }
 
 @keyframes shake {

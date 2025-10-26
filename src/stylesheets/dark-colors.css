@@ -1,8 +1,4 @@
 :root {
-    color: #ffffff;
-    background-color: #eae2b7;
-    --primary-color: #3f51b5;
-
     --p-900: #d62828;
     --p-800: #d62828;
     --p-700: #d62828;
@@ -42,4 +38,9 @@
     --a2-300: #fcbf49;
     --a2-200: #fcbf49;
     --a2-100: #fcbf49;
+
+    --a3-500: #228B22;
+
+    --w-900: #ff0000;
+    --w-500: #f77f00;
 }

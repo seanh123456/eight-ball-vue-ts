@@ -14,7 +14,6 @@ ul {
   padding: 0;
   margin: 2em 0;
   text-align: left;
-  color: #003049;
 }
 
 ul.reverse {
