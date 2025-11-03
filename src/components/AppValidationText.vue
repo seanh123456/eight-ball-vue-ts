@@ -50,10 +50,10 @@ div {
   0%, 100% {
     transform: translateX(0);
   }
-  30%, 90%{
+  30%, 90% {
     transform: translateX(-2px);
   }
-  60%{
+  60% {
     transform: translateX(2px);
   }
 }

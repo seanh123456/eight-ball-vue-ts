@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed, onMounted} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import AppSubmitButton from "./AppSubmitButton.vue"
 import AppValidationText from "./AppValidationText.vue"
 import AppInputText from "./AppInputText.vue"

@@ -5,32 +5,29 @@ defineProps<{ answer: Answer }>()
 
 // --- utils ---
 function timeAgo(date: Date) {
-  const thenMs = date.getTime();
-  const nowMs = Date.now();
-  const diffMs = nowMs - thenMs;
+  const thenMs = date.getTime()
+  const nowMs = Date.now()
+  const diffMs = nowMs - thenMs
 
-  const seconds = Math.floor(diffMs / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  const weeks = Math.floor(days / 7);
-  const months = Math.floor(days / 30); // Approximation
-  const years = Math.floor(days / 365); // Approximation
+  const seconds = Math.floor(diffMs / 1000)
+  const minutes = Math.floor(seconds / 60)
+  const hours = Math.floor(minutes / 60)
+  const days = Math.floor(hours / 24)
+  const months = Math.floor(days / 30)
+  const years = Math.floor(days / 365)
 
   if (seconds < 60) {
-    return seconds === 0 ? 'just now' : `${seconds} sec${seconds === 1 ? '' : 's'} ago`;
+    return `<1m ago`
   } else if (minutes < 60) {
-    return `${minutes} min${minutes === 1 ? '' : 's'} ago`;
+    return `${minutes}m ago`
   } else if (hours < 24) {
-    return `${hours} hr${hours === 1 ? '' : 's'} ago`;
-  } else if (days < 7) {
-    return `${days} day${days === 1 ? '' : 's'} ago`;
-  } else if (weeks < 4) {
-    return `${weeks} week${weeks === 1 ? '' : 's'} ago`;
+    return `${hours}h ago`
+  } else if (months < 1) {
+    return `${days} day${days === 1 ? '' : 's'} ago`
   } else if (months < 12) {
-    return `${months} month${months === 1 ? '' : 's'} ago`;
+    return `${months} month${months === 1 ? '' : 's'} ago`
   } else {
-    return `${years} year${years === 1 ? '' : 's'} ago`;
+    return `${years} year${years === 1 ? '' : 's'} ago`
   }
 }
 </script>
@@ -38,7 +35,7 @@ function timeAgo(date: Date) {
 <template>
   <li>
     <div>
-      <small :title="answer.time.toLocaleString()">[{{ timeAgo(answer.time) }}] </small>
+      <small :title="answer.time.toLocaleString()">{{ timeAgo(answer.time) }}&nbsp;•&nbsp;</small>
       <span class="label">Question: </span>
       {{ answer.question }}
     </div>
