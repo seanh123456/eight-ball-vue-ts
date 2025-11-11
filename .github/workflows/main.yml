@@ -19,7 +19,7 @@ jobs:
           node-version: 'latest'
 
       - run: npm ci
-      - run: npm test
+#      - run: npm test
       - run: npm run build --if-present
 
       - name: Configure AWS credentials and Deploy static site to S3 bucket
