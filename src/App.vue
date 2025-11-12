@@ -5,7 +5,7 @@ import EightBall from './components/EightBall.vue'
 <template>
   <header>
     <div class="content">
-      <h1>Magic Eight Ball Vite Vue TS</h1>
+      <h1>Magic Eight Ball</h1>
     </div>
   </header>
   <main>
