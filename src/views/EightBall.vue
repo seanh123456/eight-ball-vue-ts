@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue'
-import AppSubmitButton from "./AppSubmitButton.vue"
-import AppValidationText from "./AppValidationText.vue"
-import AppInputText from "./AppInputText.vue"
-import AppUnorderedListFade from "./AppUnorderedListFade.vue";
-import EightBallAnswerItem from "./EightBallListItem.vue"
+import AppSubmitButton from "../components/AppSubmitButton.vue"
+import AppValidationText from "../components/AppValidationText.vue"
+import AppInputText from "../components/AppInputText.vue"
+import AppUnorderedListFade from "../components/AppUnorderedListFade.vue";
+import EightBallAnswerItem from "../components/EightBallListItem.vue"
 import type {Answer} from "../constants/types.ts";
 import {messages} from "../constants/messages.ts";
 

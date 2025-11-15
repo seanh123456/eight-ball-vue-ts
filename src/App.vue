@@ -1,26 +1,24 @@
 <script setup lang="ts">
-import EightBall from './components/EightBall.vue'
+
 </script>
 
 <template>
   <header>
-    <div class="content">
-      <h1>Magic Eight Ball</h1>
-    </div>
+    <h1>Magic Eight Ball</h1>
   </header>
   <main>
     <div class="content">
-      <EightBall/>
+      <RouterView />
     </div>
   </main>
   <footer>
     <div class="footer">
       <ul>
-        <li><a href="">Footer 1</a></li>
-        <li><a href="">Footer 2</a></li>
-        <li><a href="">Footer 3</a></li>
+        <li><RouterLink to="/about">About</RouterLink></li>
+        <li><RouterLink to="/contact">Contact</RouterLink></li>
+        <li><RouterLink to="/legal">Legal</RouterLink></li>
       </ul>
-      <small class="footer-right">&copy;2025</small>
+      <small class="footer-right">Copyright &copy;2025 Hutch Rip.</small>
     </div>
   </footer>
 </template>
@@ -39,7 +37,8 @@ h1 {
 
   max-width: 720px;
   margin: 0 auto;
-  padding: .4rem;
+  padding: 1.2rem;
+  border-top: 1px solid var(--n-200);
 }
 
 footer ul {
