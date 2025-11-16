@@ -4,7 +4,13 @@
 
 <template>
   <header>
-    <h1>Magic Eight Ball</h1>
+    <div class="header">
+      <h1><RouterLink to="/">Hutch.rip</RouterLink></h1>
+      <ul class="horizontal">
+        <li><RouterLink to="/eightball">Eight Ball</RouterLink></li>
+        <li><RouterLink to="/dashboard">Dashboard</RouterLink></li>
+      </ul>
+    </div>
   </header>
   <main>
     <div class="content">
@@ -13,7 +19,7 @@
   </main>
   <footer>
     <div class="footer">
-      <ul>
+      <ul class="horizontal">
         <li><RouterLink to="/about">About</RouterLink></li>
         <li><RouterLink to="/contact">Contact</RouterLink></li>
         <li><RouterLink to="/legal">Legal</RouterLink></li>
@@ -24,12 +30,19 @@
 </template>
 
 <style scoped>
-
-h1 {
-  color: var(--p-600)
+header a {
+  color: var(--p-600);
 }
 
-.footer {
+header a:hover {
+  color: var(--a2-600);
+}
+
+header ul a {
+  font-size: 1.8em;
+}
+
+.header, .footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -41,7 +54,7 @@ h1 {
   border-top: 1px solid var(--n-200);
 }
 
-footer ul {
+ul.horizontal {
   display: flex;
   gap: 1em;
   list-style-type: none;
@@ -49,7 +62,7 @@ footer ul {
   margin: 0;
 }
 
-footer ul li {
+ul.horizontal li {
   margin: 0 0.5em;
 }
 </style>

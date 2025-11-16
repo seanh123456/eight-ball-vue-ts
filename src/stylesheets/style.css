@@ -28,13 +28,16 @@ body {
 
 header {
     background-color: var(--a1-500);
-    text-align: center;
     border-bottom-width: 5px;
     border-color: var(--a1-700);
 }
 
 h1 {
     font-size: 3.2em;
+    line-height: 1.1;
+}
+h2 {
+    font-size: 2.4em;
     line-height: 1.1;
 }
 
@@ -45,15 +48,18 @@ main {
 .content {
     max-width: 720px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 0 2rem 2rem 2rem;
 }
 
 .card {
     padding: 1px 2em;
 }
 
+.card.left {
+    text-align: left;
+}
+
 footer {
-    /*background-color: var(--a1-100);*/
 }
 
 input {

@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <h2>About</h2>
+  <h2>Home</h2>
   <div class="card">
   </div>
 </template>

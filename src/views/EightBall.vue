@@ -66,6 +66,7 @@ const isButtonDisabled = computed(
 </script>
 
 <template>
+  <h2>Magic Eight Ball</h2>
   <div class="card">
 
     <form @submit.prevent="rollBall">
