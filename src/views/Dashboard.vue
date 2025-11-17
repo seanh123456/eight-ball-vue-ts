@@ -5,7 +5,7 @@ const temp = ref(0)
 
 
 onMounted(async() => {
-  const url = "/getWeatherFromZip?lat=36.4345&lon=-76.3456"
+  const url = "/getWeatherFromZip?lat=39.4040&lon=-76.9506"
   try {
     const response = await fetch(url)
     if (!response.ok) {
