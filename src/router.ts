@@ -9,7 +9,7 @@ import Legal from './views/Legal.vue'
 
 const routes: Array<RouteRecordRaw> = [
     { path: '/', meta: { title: 'Hutch Home' }, component: Home },
-    { path: '/eightball', meta: { title: 'Eight Ball' }, component: EightBall },
+    { path: '/eightball', meta: { title: 'Magic Eight Ball' }, component: EightBall },
     { path: '/about', meta: { title: 'About' }, component: About },
     { path: '/contact', meta: { title: 'Contact' }, component: Contact },
     { path: '/dashboard', meta: { title: 'Dashboard' }, component: Dashboard },
