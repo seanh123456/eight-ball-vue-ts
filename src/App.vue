@@ -1,5 +1,6 @@
 <script setup lang="ts">
-
+import {ref} from "vue";
+const appVersion = ref(import.meta.env.VITE_APP_VERSION);
 </script>
 
 <template>
@@ -24,7 +25,7 @@
         <li><RouterLink to="/contact">Contact</RouterLink></li>
         <li><RouterLink to="/legal">Legal</RouterLink></li>
       </ul>
-      <small class="footer-right">Copyright &copy;2025 Hutch Rip.</small>
+      <small class="footer-right">ui v{{ appVersion }} &bull; Copyright &copy;2025 Hutch Rip.</small>
     </div>
   </footer>
 </template>
