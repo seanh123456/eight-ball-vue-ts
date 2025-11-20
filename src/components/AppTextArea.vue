@@ -3,7 +3,7 @@ import {ref} from "vue";
 
 const inputRef = ref<HTMLElement | null>(null)
 
-const inputValue = defineModel()
+const inputValue = defineModel<string>()
 const emit = defineEmits(['change']);
 defineExpose({
   focus,
@@ -20,16 +20,16 @@ function focus() {
 </script>
 
 <template>
-  <input
-      type="text"
+  <textarea
       ref="inputRef"
       v-model="inputValue"
       @change="handleChange"
+      rows="4"
   />
 </template>
 
 <style scoped>
-input {
+textarea {
   width: 100%;
   border-radius: 6px;
   font-size: 1.5em;
@@ -37,6 +37,7 @@ input {
   padding: 2px 6px;
   border: 2px solid transparent;
   transition: border-color .25s;
+  resize: vertical;
 
   box-sizing: border-box;
   /* Add vendor prefixes for wider browser support if needed */
@@ -44,12 +45,12 @@ input {
   -moz-box-sizing: border-box;
 }
 
-input:focus, input:hover {
+textarea:focus, textarea:hover {
   outline: none;
   border: 2px solid var(--w-500);
 }
 
-.input-error, input:focus.input-error, input:hover.input-error {
+.input-error, textarea:focus.input-error, textarea:hover.input-error {
   border-color: var(--w-900);
 }
 </style>

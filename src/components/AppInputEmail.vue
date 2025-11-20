@@ -21,7 +21,7 @@ function focus() {
 
 <template>
   <input
-      type="text"
+      type="email"
       ref="inputRef"
       v-model="inputValue"
       @change="handleChange"

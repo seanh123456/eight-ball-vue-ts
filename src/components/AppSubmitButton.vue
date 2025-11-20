@@ -11,6 +11,7 @@
 
 <style scoped>
 button {
+  width: 100%;
   border-radius: 8px;
   border: 2px solid transparent;
   padding: 0.3em 0.7em;

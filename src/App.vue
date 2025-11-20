@@ -8,8 +8,8 @@ const appVersion = ref(import.meta.env.VITE_APP_VERSION);
     <div class="header">
       <h1><RouterLink to="/">Hutch.rip</RouterLink></h1>
       <ul class="horizontal">
-        <li><RouterLink to="/eightball">Eight Ball</RouterLink></li>
         <li><RouterLink to="/dashboard">Dashboard</RouterLink></li>
+        <li><RouterLink to="/eightball">Eight Ball</RouterLink></li>
       </ul>
     </div>
   </header>
