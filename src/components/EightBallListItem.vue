@@ -33,6 +33,7 @@ function timeAgo(date: Date) {
 </script>
 
 <template>
+
   <li>
     <div>
       <small :title="answer.time.toLocaleString()">{{ timeAgo(answer.time) }}&nbsp;•&nbsp;</small>
@@ -45,6 +46,7 @@ function timeAgo(date: Date) {
       <span :class="answer.answer.positivity">{{ answer.answer.value }}</span>
     </div>
   </li>
+
 </template>
 
 <style scoped>
@@ -58,6 +60,20 @@ small:hover {
 
 .label {
   font-weight: bold;
+}
+
+li:nth-child(odd) {
+  background-color: var(--n-100);
+}
+li:nth-child(odd):hover {
+  background-color: var(--a1-100);
+}
+
+li:nth-child(even) {
+  background-color: var(--n-150);
+}
+li:nth-child(even):hover {
+  background-color: var(--a1-200);
 }
 
 .positive {

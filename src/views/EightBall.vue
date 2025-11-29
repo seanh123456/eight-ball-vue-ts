@@ -19,6 +19,7 @@ const interrogative = ref<string | undefined>(undefined)
 onMounted(() => {
   if (inputRef.value) {
     inputRef.value.focus()
+
   }
 })
 
@@ -66,7 +67,9 @@ const isButtonDisabled = computed(
 </script>
 
 <template>
+
   <h2>Magic Eight Ball</h2>
+
   <div class="card">
 
     <form @submit.prevent="rollBall">
@@ -95,6 +98,7 @@ const isButtonDisabled = computed(
     </AppUnorderedListFade>
 
   </div>
+
 </template>
 
 <style scoped>

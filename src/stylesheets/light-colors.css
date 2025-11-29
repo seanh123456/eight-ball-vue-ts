@@ -1,4 +1,9 @@
 :root {
+    --header-background-color: var(--a1-500);
+    --header-text-color: var(--p-600);
+    --background-color: var(--n-100);
+    --text-color: var(--a2-800);
+
     --p-900: #4a0a0a;
     --p-800: #701010;
     --p-700: #991919;
@@ -17,6 +22,7 @@
     --n-400: #7f7f9b;
     --n-300: #a0a0b8;
     --n-200: #c2c2d4;
+    --n-150: #e3e3ea;
     --n-100: #f3f3fa;
     --n-000: #ffffff;
 
