@@ -4,7 +4,12 @@ export function theme(themeName: string) {
 }
 
 export function resetTheme() {
-    const theme = localStorage.getItem("theme")
+    let theme = localStorage.getItem("theme")
+
+    if (!theme) {
+        theme = "auto"
+        localStorage.setItem("theme", theme)
+    }
 
     let stylesheetsAll = document.head.getElementsByClassName('stylesheet')
     let stylesheetsTheme = document.head.getElementsByClassName('stylesheet ' + theme)
